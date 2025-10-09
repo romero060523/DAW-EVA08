@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        /* Navegación */
+        nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-brand::before {
+            content: "⚕️";
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Contenedor del formulario */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 2.5rem;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .form-header h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: #6c757d;
+            margin: 0;
+        }
+
+        /* Formulario */
+        form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        label::before {
+            font-size: 1.2rem;
+        }
+
+        .label-dni::before { content: "🆔"; }
+        .label-nombre::before { content: "👤"; }
+        .label-fecha::before { content: "📅"; }
+        .label-sexo::before { content: "⚧"; }
+        .label-direccion::before { content: "🏠"; }
+        .label-telefono::before { content: "📱"; }
+        .label-correo::before { content: "📧"; }
+        .label-estado::before { content: "ℹ️"; }
+
+        input, select {
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input:readonly {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+        }
+
+        select {
+            cursor: pointer;
+            background-color: white;
+        }
+
+        /* Botones */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        button, .btn-secondary {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button[type="submit"]::before {
+            content: "💾";
+            font-size: 1.2rem;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-secondary::before {
+            content: "↩️";
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 0.5rem;
+            }
+
+            .nav-link {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.85rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-brand {
+                font-size: 1.2rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .form-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Barra de navegación -->
+<nav>
+    <div class="nav-container">
+        <a href="#" class="nav-brand">MediCare</a>
+        <ul class="nav-menu">
+            <li><a th:href="@{/pacientes}" class="nav-link active">Pacientes</a></li>
+            <li><a th:href="@{/doctores}" class="nav-link">Doctores</a></li>
+            <li><a th:href="@{/citas}" class="nav-link">Citas</a></li>
+            <li><a th:href="@{/consultas}" class="nav-link">Consultas</a></li>
+            <li><a th:href="@{/reportes}" class="nav-link">Reportes</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Formulario -->
+<div class="container">
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Nuevo Paciente</h1>
+            <p>Complete todos los campos para registrar un nuevo paciente</p>
+        </div>
+
+        <form th:action="@{/formH}" th:object="${historial}" method="post">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fechaApertura" class="label-fecha">Fecha</label>
+                    <input type="date" id="fechaApertura" th:field="*{fechaApertura}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="observaciones" class="label-observaciones">Observaciones</label>
+                    <input type="text" id="observaciones" th:field="*{observaciones}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-idPaciente">
+                    <label for="idPaciente" class="label-id">Id Paciente</label>
+                    <input type="number" id="idPaciente" th:field="*{paciente.idPaciente}" required>
+                </div>
+            </div>
+            <div class="button-group">
+                <button type="submit">Guardar Paciente</button>
+                <a th:href="@{/listarH}" class="btn-secondary">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
