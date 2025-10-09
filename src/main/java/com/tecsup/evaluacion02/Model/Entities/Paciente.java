@@ -29,7 +29,7 @@ public class Paciente {
     private String correo;
 
     @Column(nullable = false)
-    private String estado;
+    private String estado = "activo";
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoriaClinica> historia;
@@ -58,16 +58,16 @@ public class Paciente {
         return direccion;
     }
 
-    public String getEstado() {
-        return estado;
-    }
-
     public String getTelefono() {
         return telefono;
     }
 
     public String getCorreo() {
         return correo;
+    }
+
+    public String getEstado() {
+        return estado;
     }
 
     public List<HistoriaClinica> getHistoria() {
@@ -102,11 +102,11 @@ public class Paciente {
         this.telefono = telefono;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 }

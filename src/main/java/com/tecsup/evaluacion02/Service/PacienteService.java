@@ -2,49 +2,35 @@ package com.tecsup.evaluacion02.Service;
 
 import com.tecsup.evaluacion02.Model.Daos.PacienteRepository;
 import com.tecsup.evaluacion02.Model.Entities.Paciente;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PacienteService {
+public class PacienteService implements PacienteServices {
 
-    private final PacienteRepository pacienteRepository;
+    @Autowired
+    private PacienteRepository dao;
 
-    public PacienteService(PacienteRepository pacienteRepository) {
-        this.pacienteRepository = pacienteRepository;
-    }
-
+    @Override
     public List<Paciente> listar() {
-        return pacienteRepository.findAll();
+        return (List<Paciente>) dao.findAll();
     }
 
-    public Optional<Paciente> buscar(Long id) {
-        return pacienteRepository.findById(id);
+    @Override
+    public void grabar(Paciente paciente) {
+        dao.save(paciente);
     }
 
-    public Paciente guardar(Paciente paciente) {
-        /*if(pacienteRepository.existsById(paciente.getIdPaciente())) {
-            throw new RuntimeException("Ya existe un paciente con ese DNI");
-        }*/
-        return pacienteRepository.save(paciente);
+    @Override
+    public Paciente buscar(Long idPaciente) {
+        return dao.findById(idPaciente).orElse(null);
     }
 
-    public Paciente actualizar(Long id, Paciente datosActualizados) {
-        return pacienteRepository.findById(id)
-                .map(paciente -> {
-                    paciente.setNombre(datosActualizados.getNombre());
-                    paciente.setDireccion(datosActualizados.getDireccion());
-                    paciente.setTelefono(datosActualizados.getTelefono());
-                    paciente.setCorreo(datosActualizados.getCorreo());
-                    paciente.setEstado(datosActualizados.getEstado());
-                    return pacienteRepository.save(paciente);
-                })
-                .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
-    }
-
-    public void eliminar(Long id) {
-        pacienteRepository.deleteById(id);
+    @Override
+    public void eliminar(Long idPaciente) {
+        dao.deleteById(idPaciente);
     }
 }

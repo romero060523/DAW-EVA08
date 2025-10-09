@@ -1,7 +1,7 @@
 package com.tecsup.evaluacion02.Model.Daos;
 
 import com.tecsup.evaluacion02.Model.Entities.HistoriaClinica;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface HistoriaClinicaRepository extends JpaRepository<HistoriaClinica, Long> {
+public interface HistoriaClinicaRepository extends CrudRepository<HistoriaClinica, Long> {
 }
