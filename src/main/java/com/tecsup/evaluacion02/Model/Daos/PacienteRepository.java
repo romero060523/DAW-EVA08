@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface PacienteRepository extends CrudRepository<Paciente, Long> {
+public interface PacienteRepository extends CrudRepository<Paciente, String> {
     boolean existsByDni(String dni);
 }

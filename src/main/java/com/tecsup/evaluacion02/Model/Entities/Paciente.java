@@ -10,9 +10,6 @@ import java.util.List;
 @Table(name = "paciente")
 public class Paciente {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idPaciente;
-
     @Column(nullable = false, length = 8, unique = true)
     private String dni;
 
@@ -29,14 +26,10 @@ public class Paciente {
     private String correo;
 
     @Column(nullable = false)
-    private String estado = "activo";
+    private String estado = "Activo";
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoriaClinica> historia;
-
-    public Long getIdPaciente() {
-        return idPaciente;
-    }
 
     public String getDni() {
         return dni;
@@ -72,10 +65,6 @@ public class Paciente {
 
     public List<HistoriaClinica> getHistoria() {
         return historia;
-    }
-
-    public void setIdPaciente(Long idPaciente) {
-        this.idPaciente = idPaciente;
     }
 
     public void setDni(String dni) {

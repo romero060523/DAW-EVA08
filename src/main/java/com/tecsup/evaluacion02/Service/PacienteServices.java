@@ -7,6 +7,6 @@ import java.util.List;
 public interface PacienteServices {
     public List<Paciente> listar();
     public void grabar(Paciente paciente);
-    public Paciente buscar(Long idPaciente);
-    public void eliminar(Long idPaciente);
+    public Paciente buscar(String dni);
+    public void eliminar(String dni);
 }

@@ -2,8 +2,13 @@ package com.tecsup.evaluacion02.Controller;
 
 import jakarta.validation.Valid;
 import org.springframework.ui.Model;
+
+import com.tecsup.evaluacion02.Model.Entities.HistoriaClinica;
 import com.tecsup.evaluacion02.Model.Entities.Paciente;
+import com.tecsup.evaluacion02.Service.HistoriaClinicaService;
 import com.tecsup.evaluacion02.Service.PacienteService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +24,9 @@ import java.util.Map;
 @SessionAttributes("paciente")
 public class PacienteController {
     private PacienteService pacienteService;
+
+    @Autowired
+    private HistoriaClinicaService historiaClinicaService;
 
     public PacienteController(PacienteService pacienteService) {
         this.pacienteService = pacienteService;
@@ -42,12 +51,12 @@ public class PacienteController {
     }
 
     //Actualizar paciente
-    @RequestMapping(value = "/form/{idPaciente}")
-    public String editar(@PathVariable("idPaciente") Long idPaciente, Map<String, Object> model) {
+    @RequestMapping(value = "/form/{dni}")
+    public String editar(@PathVariable("dni") String dni, Map<String, Object> model) {
         Paciente paciente = null;
 
-        if (idPaciente != null) {
-            paciente = pacienteService.buscar(idPaciente);
+        if (dni != null) {
+            paciente = pacienteService.buscar(dni);
         } else {
             return "redirect:/listar";
         }
@@ -63,15 +72,22 @@ public class PacienteController {
             return "formView";
         }
         pacienteService.grabar(paciente);
+
+        //Crear y asociar historia clinica
+        HistoriaClinica historia = new HistoriaClinica();
+        historia.setPaciente(paciente);
+        historia.setFechaApertura(LocalDate.now());
+        historiaClinicaService.grabar(historia);
+        
         status.setComplete();
         return "redirect:listar";
     }
 
     //Eliminar paciente
-    @RequestMapping(value = "/eliminar/{idPaciente}")
-    public String eliminar(@PathVariable(value = "idPaciente") Long idPaciente) {
-        if (idPaciente != null) {
-            pacienteService.eliminar(idPaciente);
+    @RequestMapping(value = "/eliminar/{dni}")
+    public String eliminar(@PathVariable(value = "dni") String dni) {
+        if (dni != null) {
+            pacienteService.eliminar(dni);
         }
         return "redirect:/listar";
     }

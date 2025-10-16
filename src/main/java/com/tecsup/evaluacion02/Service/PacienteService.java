@@ -25,12 +25,12 @@ public class PacienteService implements PacienteServices {
     }
 
     @Override
-    public Paciente buscar(Long idPaciente) {
-        return dao.findById(idPaciente).orElse(null);
+    public Paciente buscar(String dni) {
+        return dao.findById(dni).orElse(null);
     }
 
     @Override
-    public void eliminar(Long idPaciente) {
-        dao.deleteById(idPaciente);
+    public void eliminar(String dni) {
+        dao.deleteById(dni);
     }
 }

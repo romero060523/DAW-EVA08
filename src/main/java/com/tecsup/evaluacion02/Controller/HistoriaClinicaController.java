@@ -39,14 +39,4 @@ public class HistoriaClinicaController {
         return "formViewH";
     }
 
-    @RequestMapping(value = "/formH", method = RequestMethod.POST)
-    public String guardar(@Valid HistoriaClinica historiaClinica, BindingResult result, Model model, SessionStatus status) {
-        if (result.hasErrors()) {
-            model.addAttribute("titulo", "Formulario Paciente");
-            return "formViewH";
-        }
-        historiaClinicaService.grabar(historiaClinica);
-        status.setComplete();
-        return "redirect:/listarH";
-    }
 }
