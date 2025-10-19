@@ -1,11 +1,9 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Nuevo Historial Clínico</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Paciente</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -161,8 +159,13 @@
         }
 
         .label-dni::before { content: "🆔"; }
+        .label-nombre::before { content: "👤"; }
         .label-fecha::before { content: "📅"; }
-        .label-observaciones::before { content: "📋"; }
+        .label-sexo::before { content: "⚧"; }
+        .label-direccion::before { content: "🏠"; }
+        .label-telefono::before { content: "📱"; }
+        .label-correo::before { content: "📧"; }
+        .label-estado::before { content: "ℹ️"; }
 
         input, select {
             padding: 0.85rem;
@@ -180,15 +183,23 @@
             box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
         }
 
-        input:readonly {
+        input:readonly, input:disabled {
             background-color: #f5f5f5;
             cursor: not-allowed;
             color: #666;
+            border-color: #e0e0e0;
         }
 
         select {
             cursor: pointer;
             background-color: #ffffff;
+        }
+
+        select:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+            color: #666;
+            border-color: #e0e0e0;
         }
 
         /* Botones */
@@ -305,6 +316,7 @@
     </style>
 </head>
 <body>
+
 <!-- Barra de navegación -->
 <nav>
     <div class="nav-container">
@@ -323,31 +335,83 @@
 <div class="container">
     <div class="form-container">
         <div class="form-header">
-            <h1>Nuevo Historial Clínico</h1>
-            <p>Complete todos los campos para registrar un nuevo historial clínico</p>
+            <h1 th:text="${paciente.dni != null and paciente.dni != ''} ? 'Editar Paciente' : 'Nuevo Paciente'">Nuevo Paciente</h1>
+            <p th:text="${paciente.dni != null and paciente.dni != ''} ? 'Modifique los datos editables del paciente' : 'Complete todos los campos para registrar un nuevo paciente'">Complete todos los campos para registrar un nuevo paciente</p>
         </div>
 
-        <form th:action="@{/formH}" th:object="${historial}" method="post">
+        <form th:action="@{/form}" th:object="${paciente}" method="post">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="dni" class="label-dni">DNI Paciente</label>
-                    <input type="text" id="dni" th:field="*{paciente.dni}" required>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="fechaApertura" class="label-fecha">Fecha</label>
-                    <input type="date" id="fechaApertura" th:field="*{fechaApertura}" required>
+                    <label for="dni" class="label-dni">DNI</label>
+                    <input type="text" id="dni" th:field="*{dni}"
+                           placeholder="Ej: 12345678" required
+                           th:readonly="${paciente.dni != null and paciente.dni != ''}">
                 </div>
 
                 <div class="form-group">
-                    <label for="observaciones" class="label-observaciones">Observaciones</label>
-                    <input type="text" id="observaciones" th:field="*{observaciones}" required>
+                    <label for="nombre" class="label-nombre">Nombres Completos</label>
+                    <input type="text" id="nombre" th:field="*{nombre}"
+                           placeholder="Ej: Juan Pérez García" required
+                           th:readonly="${paciente.dni != null and paciente.dni != ''}">
                 </div>
             </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fechaNacimiento" class="label-fecha">Fecha de Nacimiento</label>
+                    <!-- Campo visible (puede estar deshabilitado en edición) -->
+                    <input type="date" id="fechaNacimiento" 
+                           th:value="${paciente.fechaNacimiento}"
+                           th:name="${(paciente.dni != null and paciente.dni != '') ? '_fechaNacimiento' : 'fechaNacimiento'}"
+                           required
+                           th:disabled="${paciente.dni != null and paciente.dni != ''}">
+                    <!-- Campo oculto que envía el valor real cuando está en modo edición -->
+                    <input type="hidden" th:if="${paciente.dni != null and paciente.dni != ''}" 
+                           th:field="*{fechaNacimiento}">
+                </div>
+
+                <div class="form-group">
+                    <label for="sexo" class="label-sexo">Sexo</label>
+                    <select id="sexo" th:field="*{sexo}" required
+                            th:disabled="${paciente.dni != null and paciente.dni != ''}">
+                        <option value="">Seleccione...</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select>
+                    <!-- Campo oculto para sexo cuando está deshabilitado -->
+                    <input type="hidden" th:if="${paciente.dni != null and paciente.dni != ''}" 
+                           th:name="sexo" th:value="${paciente.sexo}">
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="direccion" class="label-direccion">Dirección</label>
+                <input type="text" id="direccion" th:field="*{direccion}"
+                       placeholder="Ej: Av. Principal 123, Lima" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="telefono" class="label-telefono">Teléfono</label>
+                    <input type="tel" id="telefono" th:field="*{telefono}"
+                           placeholder="Ej: 987654321" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="correo" class="label-correo">Correo Electrónico</label>
+                    <input type="email" id="correo" th:field="*{correo}"
+                           placeholder="Ej: paciente@email.com" required>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="estado" class="label-estado">Estado</label>
+                <input type="text" id="estado" th:field="*{estado}" readonly>
+            </div>
+
             <div class="button-group">
-                <button type="submit">Guardar Historial</button>
-                <a th:href="@{/listarH}" class="btn-secondary">Volver</a>
+                <button type="submit">Guardar Paciente</button>
+                <a th:href="@{/listar}" class="btn-secondary">Volver</a>
             </div>
         </form>
     </div>

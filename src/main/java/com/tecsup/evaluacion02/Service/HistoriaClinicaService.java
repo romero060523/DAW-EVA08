@@ -22,4 +22,19 @@ public class HistoriaClinicaService implements HistoriaClinicaServices {
     public void grabar(HistoriaClinica historiaClinica) {
         dao.save(historiaClinica);
     }
+
+    @Override
+    public HistoriaClinica buscarPorId(Long id) {
+        return dao.findById(id).orElse(null);
+    }
+
+    @Override
+    public boolean existePorPaciente(Paciente paciente) {
+        return dao.existsByPaciente(paciente);
+    }
+
+    @Override
+    public HistoriaClinica buscarPorPaciente(Paciente paciente) {
+        return dao.findByPaciente(paciente);
+    }
 }

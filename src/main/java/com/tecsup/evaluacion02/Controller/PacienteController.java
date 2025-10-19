@@ -37,7 +37,7 @@ public class PacienteController {
     public String listar(Model model) {
         model.addAttribute("titulo", "Listado de Pacientes");
         model.addAttribute("pacientes", pacienteService.listar());
-        return "listarView";
+        return "paciente/listarView";
     }
 
 
@@ -47,7 +47,7 @@ public class PacienteController {
         Paciente paciente = new Paciente();
         model.put("paciente", paciente);
         model.put("titulo", "Crear Pacientes");
-        return "formView";
+        return "paciente/formView";
     }
 
     //Actualizar paciente
@@ -62,23 +62,31 @@ public class PacienteController {
         }
         model.put("paciente", paciente);
         model.put("titulo", "Editar Paciente");
-        return "formView";
+        return "paciente/formView";
     }
 
     @RequestMapping(value = "/form", method = RequestMethod.POST)
     public String guardar(@Valid Paciente paciente, BindingResult result, Model model, SessionStatus status) {
         if (result.hasErrors()) {
             model.addAttribute("titulo", "Formulario Paciente");
-            return "formView";
+            return "paciente/formView";
         }
+        
+        // Verificar si el paciente es nuevo (no existe en BD)
+        Paciente pacienteExistente = pacienteService.buscar(paciente.getDni());
+        boolean esPacienteNuevo = (pacienteExistente == null);
+        
+        // Guardar el paciente
         pacienteService.grabar(paciente);
 
-        //Crear y asociar historia clinica
-        HistoriaClinica historia = new HistoriaClinica();
-        historia.setPaciente(paciente);
-        historia.setFechaApertura(LocalDate.now());
-        historiaClinicaService.grabar(historia);
-        
+        // Crear historia clínica SOLO si es un paciente nuevo y no tiene historia clínica
+        if (esPacienteNuevo && !historiaClinicaService.existePorPaciente(paciente)) {
+            HistoriaClinica historia = new HistoriaClinica();
+            historia.setPaciente(paciente);
+            historia.setFechaApertura(LocalDate.now());
+            historiaClinicaService.grabar(historia);
+        }
+
         status.setComplete();
         return "redirect:listar";
     }

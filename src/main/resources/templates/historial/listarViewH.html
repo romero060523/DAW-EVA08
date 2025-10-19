@@ -197,6 +197,29 @@
             gap: 0.7rem;
         }
 
+        .btn-edit {
+            padding: 0.6rem 1.2rem;
+            border-radius: 2px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid;
+        }
+
+        .btn-edit {
+            background: #ffffff;
+            color: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .btn-edit:hover {
+            background: #27ae60;
+            color: #ffffff;
+        }
+
         .btn-view {
             padding: 0.6rem 1.2rem;
             border-radius: 2px;
@@ -301,7 +324,7 @@
                 <th>Nombres</th>
                 <th>Observaciones</th>
                 <th>Sexo</th>
-                <th>Acciones</th>
+                <th>Detalle</th>
             </tr>
             </thead>
             <tbody>
@@ -315,7 +338,8 @@
                 </td>
                 <td>
                     <div class="action-buttons">
-                        <a href="#" class="btn-view">Ver</a>
+                        <a th:href="@{/formH/} + ${hclinico.idHistoria}" class="btn-edit">Editar</a>
+                        <a th:href="@{'/detalleHistoria/' + ${hclinico.idHistoria}}" class="btn-view">Ver</a>
                     </div>
                 </td>
             </tr>

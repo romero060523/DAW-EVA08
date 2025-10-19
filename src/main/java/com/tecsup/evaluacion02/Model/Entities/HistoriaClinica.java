@@ -60,4 +60,8 @@ public class HistoriaClinica {
     public void setPaciente(Paciente paciente) {
         this.paciente = paciente;
     }
+
+    public void setAntecedente(List<AntecedenteMedico> antecedente) {
+        this.antecedente = antecedente;
+    }
 }

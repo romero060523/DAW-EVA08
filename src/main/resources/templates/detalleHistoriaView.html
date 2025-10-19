@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Historia Clínica</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        /* Navegación */
+        nav {
+            background: #1a1a1a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0;
+            border-bottom: 3px solid #2c3e50;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+        }
+
+        .nav-brand {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-brand::before {
+            content: "⚕️";
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 0;
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #b0b0b0;
+            font-weight: 500;
+            padding: 0.7rem 1.5rem;
+            transition: all 0.3s ease;
+            border-right: 1px solid #333;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link:hover {
+            background: #2c3e50;
+            color: #ffffff;
+        }
+
+        .nav-link.active {
+            background: #2c3e50;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 1200px;
+            margin: 2.5rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Header de página */
+        .page-header {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            margin-bottom: 2rem;
+            border-left: 4px solid #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h1 {
+            color: #1a1a1a;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Tarjeta de información */
+        .info-card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #1a1a1a;
+            padding: 0.7rem;
+            background: #f5f5f5;
+            border-radius: 2px;
+            border-left: 3px solid #2c3e50;
+        }
+
+        /* Sección de antecedentes */
+        .section-header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 2px 2px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .section-content {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 0 0 2px 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            border: 1px solid #e0e0e0;
+            border-top: none;
+        }
+
+        /* Mensaje vacío */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .empty-state p {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3px;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        thead {
+            background: #2c3e50;
+            color: white;
+        }
+
+        th {
+            padding: 1.2rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1.2px;
+            border-bottom: 2px solid #1a1a1a;
+        }
+
+        td {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #e8e8e8;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+            background: #ffffff;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        tbody tr:hover {
+            background: #f0f0f0;
+        }
+
+        /* Botones */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 2px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border: 1px solid;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #2c3e50;
+            color: white;
+            border-color: #2c3e50;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary:hover {
+            background: #34495e;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #666;
+            border-color: #d0d0d0;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #999;
+        }
+
+        .btn-edit {
+            background: #ffffff;
+            color: #27ae60;
+            border-color: #27ae60;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-edit:hover {
+            background: #27ae60;
+            color: #ffffff;
+        }
+
+        .btn-back {
+            background: #ffffff;
+            color: #666;
+            border-color: #d0d0d0;
+        }
+
+        .btn-back:hover {
+            background: #f5f5f5;
+            border-color: #999;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 0.9rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Barra de navegación -->
+<nav>
+    <div class="nav-container">
+        <a href="#" class="nav-brand">MediCare</a>
+        <ul class="nav-menu">
+            <li><a th:href="@{/listar}" class="nav-link active">Pacientes</a></li>
+            <li><a href="#" class="nav-link">Doctores</a></li>
+            <li><a href="#" class="nav-link">Citas</a></li>
+            <li><a href="#" class="nav-link">Consultas</a></li>
+            <li><a href="#" class="nav-link">Reportes</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Contenido principal -->
+<div class="container">
+    <div class="page-header">
+        <h1>Detalle de Historia Clínica</h1>
+    </div>
+
+    <!-- Información de la historia clínica -->
+    <div class="info-card">
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Nro Antecedente</span>
+                <span class="info-value" th:text="${historia.idHistoria}"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Paciente</span>
+                <span class="info-value" th:text="${historia.paciente.nombre}"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Fecha de Apertura</span>
+                <span class="info-value" th:text="${historia.fechaApertura}"></span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Observaciones</span>
+                <span class="info-value" th:text="${historia.observaciones}"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Antecedentes médicos -->
+    <div class="section-header">
+        <h2>Antecedentes Médicos</h2>
+    </div>
+
+    <div class="section-content">
+        <!-- Sin antecedentes -->
+        <div th:if="${#lists.isEmpty(antecedentes)}" class="empty-state">
+            <p>No hay antecedentes médicos registrados.</p>
+            <a th:href="@{'/formA/' + ${historia.idHistoria}}" class="btn btn-primary">+ Crear Antecedente Médico</a>
+        </div>
+
+        <!-- Con antecedentes -->
+        <div th:if="${!#lists.isEmpty(antecedentes)}">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="amedico : ${antecedentes}">
+                    <td th:text="${amedico.idAntecedente}"></td>
+                    <td th:text="${amedico.tipo}"></td>
+                    <td th:text="${amedico.descripcion}"></td>
+                    <td>
+                        <a th:href="@{'/formA/' + ${historia.idHistoria} + '?edit=' + ${amedico.idAntecedente}}" class="btn btn-edit">Editar</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <a th:href="@{'/formA/' + ${historia.idHistoria}}" class="btn btn-primary">+ Crear Nuevo Antecedente</a>
+        </div>
+    </div>
+
+    <!-- Botón volver -->
+    <div class="action-buttons">
+        <a th:href="@{/listarH}" class="btn btn-back">↩ Volver</a>
+    </div>
+</div>
+
+</body>
+</html>
