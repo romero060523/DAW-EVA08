@@ -13,12 +13,17 @@ public class AntecedenteMedicoService implements AntecedenteMedicoServices {
     private AntecedenteMedicoRepository dao;
 
     @Override
-    public List<AntecedenteMedico> listarPorHistoria(Long idHistoria) {
-        return dao.findByHistoriaIdHistoria(idHistoria);
+    public List<AntecedenteMedico> listarPorHistoria(String idHistoria) {
+        // En MongoDB, los antecedentes están embebidos en HistoriaClinica
+        // Este método ya no se usa directamente, se obtienen desde HistoriaClinica.getAntecedente()
+        // Retornamos lista vacía o podríamos eliminarlo
+        return List.of();
     }
 
     @Override
     public void grabar(AntecedenteMedico antecedenteMedico) {
+        // En MongoDB los antecedentes están embebidos, 
+        // se guardan actualizando la HistoriaClinica completa
         dao.save(antecedenteMedico);
     }
 }

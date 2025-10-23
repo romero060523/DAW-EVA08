@@ -1,26 +1,22 @@
 package com.tecsup.evaluacion02.Model.Entities;
 
-import jakarta.persistence.*;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "antecedente_medico")
+// AntecedenteMedico ahora es un subdocumento embebido en HistoriaClinica
 public class AntecedenteMedico {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAntecedente;
+    @Field
+    private String idAntecedente;
 
-    @Column(length = 50)
+    @Field
     private String tipo;
 
-    @Column(length = 500)
+    @Field
     private String descripcion;
 
-    @ManyToOne
-    @JoinColumn(name = "idHistoria", nullable = false)
-    private HistoriaClinica historia;
+    // Ya no necesitamos referencia a HistoriaClinica (está embebido)
 
-    public Long getIdAntecedente() {
+    public String getIdAntecedente() {
         return idAntecedente;
     }
 
@@ -32,11 +28,7 @@ public class AntecedenteMedico {
         return descripcion;
     }
 
-    public HistoriaClinica getHistoria() {
-        return historia;
-    }
-
-    public void setIdAntecedente(Long idAntecedente) {
+    public void setIdAntecedente(String idAntecedente) {
         this.idAntecedente = idAntecedente;
     }
 
@@ -46,9 +38,5 @@ public class AntecedenteMedico {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public void setHistoria(HistoriaClinica historia) {
-        this.historia = historia;
     }
 }

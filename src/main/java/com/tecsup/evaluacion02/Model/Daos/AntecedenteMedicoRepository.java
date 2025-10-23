@@ -1,10 +1,9 @@
 package com.tecsup.evaluacion02.Model.Daos;
 
 import com.tecsup.evaluacion02.Model.Entities.AntecedenteMedico;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
-
-public interface AntecedenteMedicoRepository extends JpaRepository<AntecedenteMedico, Long> {
-    List<AntecedenteMedico> findByHistoriaIdHistoria(Long idHistoria);
+// AntecedenteMedico ahora está embebido en HistoriaClinica, este repo puede ser opcional
+public interface AntecedenteMedicoRepository extends MongoRepository<AntecedenteMedico, String> {
+    // Ya no necesitamos findByHistoria porque están embebidos
 }

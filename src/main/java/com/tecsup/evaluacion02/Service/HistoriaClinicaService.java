@@ -24,7 +24,7 @@ public class HistoriaClinicaService implements HistoriaClinicaServices {
     }
 
     @Override
-    public HistoriaClinica buscarPorId(Long id) {
+    public HistoriaClinica buscarPorId(String id) {
         return dao.findById(id).orElse(null);
     }
 

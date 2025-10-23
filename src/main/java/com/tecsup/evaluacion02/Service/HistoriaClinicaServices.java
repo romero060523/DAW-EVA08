@@ -8,7 +8,7 @@ import java.util.List;
 public interface HistoriaClinicaServices {
     public List<HistoriaClinica> listar();
     public void grabar(HistoriaClinica historiaClinica);
-    public HistoriaClinica buscarPorId(Long id);
+    public HistoriaClinica buscarPorId(String id);
     public boolean existePorPaciente(Paciente paciente);
     public HistoriaClinica buscarPorPaciente(Paciente paciente);
 }

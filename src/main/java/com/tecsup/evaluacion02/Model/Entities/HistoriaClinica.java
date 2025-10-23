@@ -1,31 +1,32 @@
 package com.tecsup.evaluacion02.Model.Entities;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
-@Table(name = "historia_clinica")
+@Document(collection = "historia_clinica")
 public class HistoriaClinica {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idHistoria;
+    private String idHistoria;
 
+    @Field
     private LocalDate fechaApertura;
 
-    @Column(length = 500)
+    @Field
     private String observaciones;
 
-    @ManyToOne
-    @JoinColumn(name = "idPaciente", nullable = false)
+    @DBRef
     private Paciente paciente;
 
-    @OneToMany(mappedBy = "historia", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Field
     private List<AntecedenteMedico> antecedente;
 
-    public Long getIdHistoria() {
+    public String getIdHistoria() {
         return idHistoria;
     }
 
@@ -45,7 +46,7 @@ public class HistoriaClinica {
         return antecedente;
     }
 
-    public void setIdHistoria(Long idHistoria) {
+    public void setIdHistoria(String idHistoria) {
         this.idHistoria = idHistoria;
     }
 

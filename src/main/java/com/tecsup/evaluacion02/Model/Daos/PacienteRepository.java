@@ -1,10 +1,8 @@
 package com.tecsup.evaluacion02.Model.Daos;
 
 import com.tecsup.evaluacion02.Model.Entities.Paciente;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.Optional;
-
-public interface PacienteRepository extends CrudRepository<Paciente, String> {
+public interface PacienteRepository extends MongoRepository<Paciente, String> {
     boolean existsByDni(String dni);
 }

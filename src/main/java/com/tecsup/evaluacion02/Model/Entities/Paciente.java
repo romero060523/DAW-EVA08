@@ -1,35 +1,40 @@
 package com.tecsup.evaluacion02.Model.Entities;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
-@Table(name = "paciente")
+@Document(collection = "paciente")
 public class Paciente {
     @Id
-    @Column(nullable = false, length = 8, unique = true)
     private String dni;
 
-    @Column(nullable = false, length = 100)
+    @Field
     private String nombre;
 
+    @Field
     private LocalDate fechaNacimiento;
 
-    @Column(length = 10)
+    @Field
     private String sexo;
 
+    @Field
     private String direccion;
+    
+    @Field
     private String telefono;
+    
+    @Field
     private String correo;
 
-    @Column(nullable = false)
+    @Field
     private String estado = "Activo";
 
-    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<HistoriaClinica> historia;
+    // En MongoDB no necesitamos la lista de historias aquí (relación inversa)
 
     public String getDni() {
         return dni;
@@ -61,10 +66,6 @@ public class Paciente {
 
     public String getEstado() {
         return estado;
-    }
-
-    public List<HistoriaClinica> getHistoria() {
-        return historia;
     }
 
     public void setDni(String dni) {

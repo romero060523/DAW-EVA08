@@ -30,20 +30,16 @@ public class AntecedenteMedicoController {
 
     // Crear nuevo antecedente
     @RequestMapping(value ="/formA/{idHistoria}", method = RequestMethod.GET)
-    public String crear(@PathVariable Long idHistoria, Map<String, Object> model) {
+    public String crear(@PathVariable String idHistoria, Map<String, Object> model) {
         AntecedenteMedico antecedenteMedico = new AntecedenteMedico();
-        // Asocia el idHistoria al antecedente si tu modelo lo permite
-        // antecedenteMedico.setHistoriaId(idHistoria); // Ajusta según tu modelo
-        // Debe coincidir con @SessionAttributes("antecedente") y con el th:object del formulario
         model.put("antecedente", antecedenteMedico);
         model.put("idHistoria", idHistoria);
         model.put("titulo", "Crear Antecedente Médico");
-        // La vista está en templates/antecedente/formViewA.html
         return "antecedente/formViewA";
     }
 
     @RequestMapping(value = "/formA/{idHistoria}", method = RequestMethod.POST)
-    public String guardar(@PathVariable Long idHistoria,
+    public String guardar(@PathVariable String idHistoria,
                           @Valid @ModelAttribute("antecedente") AntecedenteMedico antecedenteMedico,
                           BindingResult result,
                           Model model,
@@ -54,11 +50,14 @@ public class AntecedenteMedicoController {
             return "antecedente/formViewA";
         }
 
-        // Asociar la historia clínica al antecedente
+        // En MongoDB, los antecedentes están embebidos en la historia clínica
         HistoriaClinica historia = historiaClinicaService.buscarPorId(idHistoria);
-        antecedenteMedico.setHistoria(historia);
-
-        antecedenteMedicoService.grabar(antecedenteMedico);
+        if (historia.getAntecedente() == null) {
+            historia.setAntecedente(new java.util.ArrayList<>());
+        }
+        historia.getAntecedente().add(antecedenteMedico);
+        historiaClinicaService.grabar(historia);
+        
         status.setComplete();
         return "redirect:/detalleHistoria/" + idHistoria;
     }

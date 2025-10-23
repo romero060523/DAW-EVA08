@@ -35,7 +35,7 @@ public class HistoriaClinicaController {
     }
 
     @RequestMapping(value = "/detalleHistoria/{idHistoria}", method = RequestMethod.GET)
-    public String detalleHistoria(@PathVariable Long idHistoria, Model model) {
+    public String detalleHistoria(@PathVariable String idHistoria, Model model) {
         HistoriaClinica historia = historiaClinicaService.buscarPorId(idHistoria);
         List<AntecedenteMedico> antecedentes = historia.getAntecedente();
         model.addAttribute("historia", historia);
@@ -44,14 +44,14 @@ public class HistoriaClinicaController {
     }
 
     @RequestMapping(value = "/formH/{idHistoria}", method = RequestMethod.GET)
-    public String editarHistoria(@PathVariable Long idHistoria, Model model) {
+    public String editarHistoria(@PathVariable String idHistoria, Model model) {
         HistoriaClinica historia = historiaClinicaService.buscarPorId(idHistoria);
         model.addAttribute("historia", historia);
         return "historial/formViewH";
     }
 
     @RequestMapping(value = "/formH/{idHistoria}", method = RequestMethod.POST)
-    public String guardarHistoria(@PathVariable Long idHistoria, @ModelAttribute("historia") HistoriaClinica historiaClinica) {
+    public String guardarHistoria(@PathVariable String idHistoria, @ModelAttribute("historia") HistoriaClinica historiaClinica) {
     HistoriaClinica original = historiaClinicaService.buscarPorId(idHistoria);
     historiaClinica.setIdHistoria(idHistoria);
     historiaClinica.setPaciente(original.getPaciente()); // Asocia el paciente original
